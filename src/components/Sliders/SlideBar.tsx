@@ -12,6 +12,7 @@ interface SliderProps {
      * An optional function to be called when form is saved
      **/
     onChange?: (arg?: number) => void
+    discrete?: boolean
 }
 
 const labels = [
@@ -22,7 +23,7 @@ const labels = [
 ]
 
 const SliderBar = (props: SliderProps) => {
-    const { start = 0, end = 100, defaultValue = 0, step = 33.33, fill, background, onChange } = props
+    const { start = 0, end = 100, defaultValue = 0, step = 1, fill, background, onChange, discrete = false } = props
     const [value, setValue] = useState(defaultValue)
 
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +61,10 @@ const SliderBar = (props: SliderProps) => {
         }
     }
 
+    const stepCalculator = (discrete ? (100 / (labels.length - 1)) : step).toFixed(2);
+    // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
+
+
     return (
         <div className='SliderBar-Wrapper'>
             <div className="SliderBar">
@@ -71,7 +76,7 @@ const SliderBar = (props: SliderProps) => {
                     style={{ background: bg, color: `${settings.fill}` }}
                     value={value}
                     onChange={onSlide}
-                    step={step}
+                    step={stepCalculator}
                 />
                 <div className='Slider-custom-thumb-wrapper'>
                     <span className='Slider-custom-thumb' style={customThumbPositionLogic()}></span>
