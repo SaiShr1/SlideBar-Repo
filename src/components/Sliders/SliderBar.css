@@ -1,0 +1,66 @@
+.SliderBar {
+  margin: 0.3125rem 0;
+}
+.SliderBar-wrapper {
+  background-color: #edf1f7;
+  border-radius: 0.125rem;
+  height: 0.25rem;
+  position: relative;
+}
+
+.SliderBar-track {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0.5rem;
+  height: 0.5rem;
+  outline: none;
+  position: relative;
+  width: 100%;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    background: rgba(108, 92, 231, 0.5);
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 100%;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    transform: translateX(-50%);
+    &:hover {
+      transform: scale(1.5);
+    }
+  }
+
+  &::-moz-range-thumb {
+    background: rgba(108, 92, 231, 0.5);
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+
+  &::-ms-thumb {
+    background: rgba(108, 92, 231, 0.5);
+    height: 1.25rem;
+    width: 1.25rem;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+}
+
+.SliderBar-label-container {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.SliderBar-labels {
+  transform: translateX(-50%);
+  position: absolute;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
