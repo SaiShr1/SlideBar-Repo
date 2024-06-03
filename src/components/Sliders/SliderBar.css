@@ -1,10 +1,10 @@
 .SliderBar {
   margin: 0.3125rem 0;
 }
-.SliderBar-wrapper {
-  background-color: #edf1f7;
+.SliderBar-Wrapper {
   border-radius: 0.125rem;
-  height: 0.25rem;
+  height: 5rem;
+  width: 40.875rem;
   position: relative;
 }
 
