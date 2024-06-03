@@ -43,9 +43,10 @@ const SliderBar = (props: SliderProps) => {
     const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1
         }%)`
 
-    const labelsMapper = labels.map((item: string, i: number) => {
+    const labelsMapper = labels.map((item: string, index: number) => {
+        const labelPosition = (100 / (labels.length - 1)) * index;
         return (
-            <span className='SliderBar-labels' style={{ left: `${(100 / (labels.length - 1)) * i}%` }}>
+            <span className='SliderBar-labels' style={{ left: `${labelPosition}%` }}>
                 {item}
             </span>
         )
@@ -63,6 +64,9 @@ const SliderBar = (props: SliderProps) => {
                 onChange={onSlide}
                 step={step}
             />
+            <div className='Slider-custom-thumb-wrapper'>
+                <span className='Slider-custom-thumb'></span>
+            </div>
             <div className="SliderBar-label-container">
                 {labelsMapper}
             </div>
