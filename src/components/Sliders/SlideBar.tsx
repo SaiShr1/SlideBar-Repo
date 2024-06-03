@@ -52,23 +52,33 @@ const SliderBar = (props: SliderProps) => {
         )
     })
 
+    const customThumbPositionLogic = () => {
+        const positionFromStartToValue = (value - start);
+        const totalRange = (end - start);
+        return {
+            left: `${((positionFromStartToValue) / (totalRange)) * 100}%`
+        }
+    }
+
     return (
-        <div className="SliderBar">
-            <input
-                type="range"
-                min={start}
-                max={end}
-                className="SliderBar-track"
-                style={{ background: bg, color: `${settings.fill}` }}
-                value={value}
-                onChange={onSlide}
-                step={step}
-            />
-            <div className='Slider-custom-thumb-wrapper'>
-                <span className='Slider-custom-thumb'></span>
-            </div>
-            <div className="SliderBar-label-container">
-                {labelsMapper}
+        <div className='SliderBar-Wrapper'>
+            <div className="SliderBar">
+                <input
+                    type="range"
+                    min={start}
+                    max={end}
+                    className="SliderBar-track"
+                    style={{ background: bg, color: `${settings.fill}` }}
+                    value={value}
+                    onChange={onSlide}
+                    step={step}
+                />
+                <div className='Slider-custom-thumb-wrapper'>
+                    <span className='Slider-custom-thumb' style={customThumbPositionLogic()}></span>
+                </div>
+                <div className="SliderBar-label-container">
+                    {labelsMapper}
+                </div>
             </div>
         </div>
     )
