@@ -5,7 +5,10 @@ function App() {
 
   return (
     <>
-      <SliderBar />
+      <h3>Discrete Slider</h3>
+      <SliderBar defaultValue={0} discrete={true} />
+      <h3>Slider</h3>
+      <SliderBar defaultValue={0} discrete={false} />
     </>
   )
 }

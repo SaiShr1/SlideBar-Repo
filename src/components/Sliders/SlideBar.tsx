@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import './SliderBar.css'
 
 interface SliderProps {
-    defaultValue?: number
+    defaultValue: number
     start?: number
     end?: number
     step?: number
@@ -12,7 +12,7 @@ interface SliderProps {
      * An optional function to be called when form is saved
      **/
     onChange?: (arg?: number) => void
-    discrete?: boolean
+    discrete: boolean
 }
 
 const labels = [
@@ -20,16 +20,19 @@ const labels = [
     'Plain',
     'Straightforward',
     'Technical',
+    'Complex',
 ]
 
 const SliderBar = (props: SliderProps) => {
-    const { start = 0, end = 100, defaultValue = 0, step = 1, fill, background, onChange, discrete = false } = props
-    const [value, setValue] = useState(defaultValue)
-    const sliderRef = useRef<HTMLDivElement>(null)
+    const { start = 0, end = 100, step = 1, onChange } = props
+    const [value, setValue] = useState(props.defaultValue)
+    const sliderRef = useRef<HTMLInputElement>(null)
+    // const thumbRef = useRef<HTMLSpanElement>(null)
     console.log(value, 'value', typeof value);
 
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = Math.round(Number(event.target.value));
+        // const newValue = Math.round((Number(event.target.value)).toFixed(2));
+        const newValue = Number(Math.round(Number(event.target.value)).toFixed(2));
         setValue(newValue)
         if (onChange) {
             onChange(newValue)
@@ -37,8 +40,8 @@ const SliderBar = (props: SliderProps) => {
     }
 
     const settings = {
-        fill: fill || '#A9B6CB',
-        background: background || '#EDF1F7',
+        fill: props.fill || '#6C5CE7',
+        background: props.background || '#C7B9FA',
     }
 
     const percentage = (100 * (value - start)) / (end - start)
@@ -63,56 +66,83 @@ const SliderBar = (props: SliderProps) => {
         }
     }
 
-    const stepCalculator = (discrete ? (100 / (labels.length - 1)) : step).toFixed(2);
+    const stepCalculator = (props.discrete ? (100 / (labels.length - 1)) : step).toFixed(2);
     // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!sliderRef.current) {
-                return;
-            }
-            const slider = sliderRef.current;
-            const rect = slider.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const width = rect.right - rect.left;
-            let newValue = ((x / width) * (end - start)) + start;
-
-            // Calculate the nearest step
-            newValue = Math.round((newValue / step) * step);
-
-            //Ensure the value is within the range
-            newValue = Math.max(start, Math.min(end, newValue));
-
-            setValue(newValue);
-            if (onChange) {
-                onChange(newValue);
-            }
-
-            console.log('newValue Mouse Event', newValue);
-        }
-
-        const handleMouseUp = () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        }
-
-        // Remove the old event listeners
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-
+    const handleMouseDown = () => {
         // Add new event listeners
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
-        e.preventDefault(); // Prevent any default action
-
+        // e.preventDefault(); // Prevent any default action
     }
+
+    const handleMouseMove = (e: MouseEvent) => {
+        // const thumbStepInNumber = Math.round(Number(stepCalculator))
+        if (!sliderRef.current) {
+            return;
+        }
+        // Get the slider element
+        const slider = sliderRef.current;
+        // Get the slider's bounding rectangle
+        const rect = slider.getBoundingClientRect();
+        // Calculate the x position of the mouse relative to the slider
+        // here e.clientX is the x position of the mouse relative to the window
+        // And rect.left is the x position of the slider relative to the window
+        const x = e.clientX - rect.left;
+        // Calculate the width of the slider
+        const width = rect.right - rect.left;
+        // Calculate the new value of the slider by converting the x position to a value within the range of the slider
+        // here (x / width) gives the percentage of the slider that the mouse is over
+        // and (end - start) gives the range of the slider
+        // and ((end - start) * (x / width)) gives the value within the range of the slider
+        // and start + ((end - start) * (x / width)) gives the value within the range of the slider starting from the start value
+        let newValue = Number(Math.round(((x / width) * (end - start)) + start).toFixed(2));
+
+        // This logic is used to snap the thumb to the nearest step
+        if (props.discrete) {
+            // Calculate the nearest step
+            const stepInNumber = Math.round(Number(stepCalculator));
+            // Calculate the remainder which is used to determine if the thumb should snap to the next step
+            const remainder = newValue % stepInNumber;
+            // If the remainder is less than half of the step, snap to the lower step, otherwise snap to the higher step
+            if (remainder < stepInNumber / 2) {
+                // Snap to the lower step if remainder is less than half of the step
+                newValue = newValue - remainder;
+            } else {
+                // Snap to the higher step if remainder is greater than half of the step
+                newValue = newValue + stepInNumber - remainder;
+            }
+        }
+        //Ensure the value is within the range
+        newValue = Math.round(Math.max(start, Math.min(end, newValue)));
+        // Update the value
+        setValue(newValue);
+        if (onChange) {
+            onChange(newValue);
+        }
+    }
+
+    const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    }
+
+
+    const marksMapper = labels.map((_item: string, index: number) => {
+        const labelPosition = ((100 / (labels.length - 1))) * index;
+        // const markPosition = index === 0 ? labelPosition : labelPosition - (2 / labels.length);
+        return (
+            <span key={index} className='Slider-mark' style={{ left: `${labelPosition}%` }}></span>
+        )
+    })
+
 
 
     return (
         <div className='SliderBar-Wrapper'>
             <div className="SliderBar">
                 <input
+                    ref={sliderRef}
                     type="range"
                     min={start}
                     max={end}
@@ -122,7 +152,11 @@ const SliderBar = (props: SliderProps) => {
                     onChange={onSlide}
                     step={stepCalculator}
                 />
+                <div className='Slider-marks-wrapper'>
+                    {marksMapper}
+                </div>
                 <div className='Slider-custom-thumb-wrapper'>
+                    {/* Add ref={thumbRef} for access thumb in future */}
                     <span className='Slider-custom-thumb' style={customThumbPositionLogic()} onMouseDown={handleMouseDown}></span>
                 </div>
                 <div className="SliderBar-label-container">
