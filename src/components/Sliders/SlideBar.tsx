@@ -1,6 +1,10 @@
 import React, { useState, useRef } from 'react'
 import './SliderBar.css'
 
+interface labelsDescriptionArrayProps {
+    label: string,
+    description: string
+}
 interface SliderProps {
     defaultValue: number
     start?: number
@@ -13,21 +17,18 @@ interface SliderProps {
      **/
     onChange?: (arg?: number) => void
     discrete: boolean
-}
+    labelsDescriptionArray: Array<labelsDescriptionArrayProps>
+    marks: boolean
+    markForEachStep?: boolean
 
-const labels = [
-    'None',
-    'Plain',
-    'Straightforward',
-    'Technical',
-    'Complex',
-]
+}
 
 const SliderBar = (props: SliderProps) => {
     const { start = 0, end = 100, step = 1, onChange } = props
     const [value, setValue] = useState(props.defaultValue)
     const sliderRef = useRef<HTMLInputElement>(null)
     // const thumbRef = useRef<HTMLSpanElement>(null)
+    const labelDescriptionArray: labelsDescriptionArrayProps[] = props.labelsDescriptionArray;
     console.log(value, 'value', typeof value);
 
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,14 +50,14 @@ const SliderBar = (props: SliderProps) => {
     const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1
         }%)`
 
-    const labelsMapper = labels.map((item: string, index: number) => {
-        const labelPosition = (100 / (labels.length - 1)) * index;
+    const labelsMapper = labelDescriptionArray.map((item: labelsDescriptionArrayProps, index: number) => {
+        const labelPosition = (100 / (labelDescriptionArray.length - 1)) * index;
         return (
             <span key={index} className='SliderBar-labels' style={{ left: `${labelPosition}%` }}>
-                {item}
+                {item.label}
             </span>
         )
-    })
+    });
 
     const customThumbPositionLogic = () => {
         const positionFromStartToValue = (value - start);
@@ -64,9 +65,9 @@ const SliderBar = (props: SliderProps) => {
         return {
             left: `${((positionFromStartToValue) / (totalRange)) * 100}%`
         }
-    }
+    };
 
-    const stepCalculator = (props.discrete ? (100 / (labels.length - 1)) : step).toFixed(2);
+    const stepCalculator = (props.discrete ? (100 / (labelDescriptionArray.length - 1)) : step).toFixed(2);
     // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
 
     const handleMouseDown = () => {
@@ -74,7 +75,7 @@ const SliderBar = (props: SliderProps) => {
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
         // e.preventDefault(); // Prevent any default action
-    }
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
         // const thumbStepInNumber = Math.round(Number(stepCalculator))
@@ -120,22 +121,44 @@ const SliderBar = (props: SliderProps) => {
         if (onChange) {
             onChange(newValue);
         }
-    }
+    };
 
     const handleMouseUp = () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
-    }
+    };
 
 
-    const marksMapper = labels.map((_item: string, index: number) => {
-        const labelPosition = ((100 / (labels.length - 1))) * index;
-        // const markPosition = index === 0 ? labelPosition : labelPosition - (2 / labels.length);
+    const marksMapper = labelDescriptionArray.map((_item: labelsDescriptionArrayProps, index: number) => {
+        const markPosition = ((100 / (labelDescriptionArray.length - 1))) * index;
         return (
-            <span key={index} className='Slider-mark' style={{ left: `${labelPosition}%` }}></span>
+            <span key={index} className='Slider-mark' style={{ left: `${markPosition}%` }}></span>
         )
-    })
+    });
 
+    const totalSteps = 100 / step;
+    const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * step);
+    const marksForEachStepMapper = stepsArray.map((currentStep) => {
+        return (
+            <span key={currentStep} className='Slider-mark-for-each-step' style={{ left: `${currentStep}%` }}></span>
+        )
+    });
+
+
+    const labelDescriptionMapper = () => {
+        // Converting value to percentage but not multiplying by 100
+        const valueToPercentage = (value / 100);
+        // Multiplying by (labelDescriptionArray.length - 1)  then rounding it up to get the index of the labelDescriptionArray
+        const indexToRenderDescriptionDynamically = Math.round(valueToPercentage * (labelDescriptionArray.length - 1));
+        return (
+            props.discrete ?
+                <span className='Slider-label-description'>
+                    {labelDescriptionArray[(indexToRenderDescriptionDynamically)].description}
+                </span>
+                :
+                null
+        )
+    };
 
 
     return (
@@ -153,14 +176,24 @@ const SliderBar = (props: SliderProps) => {
                     step={stepCalculator}
                 />
                 <div className='Slider-marks-wrapper'>
-                    {marksMapper}
+                    {props.marks && props.markForEachStep ?
+                        marksForEachStepMapper
+                        :
+                        props.marks ?
+                            marksMapper
+                            :
+                            null
+                    }
                 </div>
-                <div className='Slider-custom-thumb-wrapper'>
+                <div className='Slider-custom-thumb-container'>
                     {/* Add ref={thumbRef} for access thumb in future */}
                     <span className='Slider-custom-thumb' style={customThumbPositionLogic()} onMouseDown={handleMouseDown}></span>
                 </div>
                 <div className="SliderBar-label-container">
                     {labelsMapper}
+                </div>
+                <div className="SliderBar-label-description-container">
+                    {labelDescriptionMapper()}
                 </div>
             </div>
         </div>
