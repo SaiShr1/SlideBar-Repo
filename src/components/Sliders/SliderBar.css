@@ -2,8 +2,8 @@
   margin: 0.3125rem 0;
 }
 .SliderBar-Wrapper {
-  border-radius: 100%;
-  height: 5rem;
+  /* border-radius: 100%; */
+  height: 5.5rem;
   width: 40.875rem;
   position: relative;
 }

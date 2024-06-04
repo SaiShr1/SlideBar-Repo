@@ -26,6 +26,17 @@ function App() {
     },
   ]
 
+  const labelsDescriptionArrayShort = [
+    {
+      label: "None",
+      description: ""
+    },
+    {
+      label: 'Complex',
+      description: "Achyut Keshav Hari Narayan"
+    },
+  ]
+
   return (
     <>
       <h3>Discrete Slider</h3>
@@ -39,7 +50,7 @@ function App() {
       <SliderBar
         defaultValue={0}
         discrete={false}
-        labelsDescriptionArray={labelsDescriptionArray}
+        labelsDescriptionArray={labelsDescriptionArrayShort}
         marks={true}
         markForEachStep={true}
       />

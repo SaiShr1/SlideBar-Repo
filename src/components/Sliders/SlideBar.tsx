@@ -128,11 +128,23 @@ const SliderBar = (props: SliderProps) => {
         document.removeEventListener('mouseup', handleMouseUp);
     };
 
-
+    const handleMarkClick = (index: number) => {
+        const newValue = start + ((end - start) / (labelDescriptionArray.length - 1)) * index;
+        // console.log('newValue:::::---->', newValue);
+        setValue(newValue);
+        if (onChange) {
+            onChange(newValue);
+        }
+    };
     const marksMapper = labelDescriptionArray.map((_item: labelsDescriptionArrayProps, index: number) => {
-        const markPosition = ((100 / (labelDescriptionArray.length - 1))) * index;
+        const markLeftPosition = ((100 / (labelDescriptionArray.length - 1))) * index;
         return (
-            <span key={index} className='Slider-mark' style={{ left: `${markPosition}%` }}></span>
+            <span
+                key={index}
+                className='Slider-mark'
+                style={{ left: `${markLeftPosition}%` }}
+                onClick={() => { handleMarkClick(index) }}
+            ></span>
         )
     });
 
@@ -140,7 +152,18 @@ const SliderBar = (props: SliderProps) => {
     const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * step);
     const marksForEachStepMapper = stepsArray.map((currentStep) => {
         return (
-            <span key={currentStep} className='Slider-mark-for-each-step' style={{ left: `${currentStep}%` }}></span>
+            <span
+                key={currentStep}
+                className='Slider-mark-for-each-step'
+                style={{ left: `${currentStep}%` }}
+                onClick={() => {
+                    const newValue = start + (currentStep / 100) * (end - start);
+                    setValue(newValue);
+                    if (onChange) {
+                        onChange(newValue);
+                    }
+                }}
+            ></span>
         )
     });
 
