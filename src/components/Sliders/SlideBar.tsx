@@ -142,7 +142,10 @@ const SliderBar = (props: SliderProps) => {
             <span
                 key={index}
                 className='Slider-mark'
-                style={{ left: `${markLeftPosition}%` }}
+                style={{
+                    left: `${markLeftPosition}%`,
+                    backgroundColor: markLeftPosition <= value ? '#c7b9fa' : '#6C5CE7'
+                }}
                 onClick={() => { handleMarkClick(index) }}
             ></span>
         )
@@ -155,7 +158,10 @@ const SliderBar = (props: SliderProps) => {
             <span
                 key={currentStep}
                 className='Slider-mark-for-each-step'
-                style={{ left: `${currentStep}%` }}
+                style={{
+                    left: `${currentStep}%`,
+                    backgroundColor: currentStep <= value ? '#c7b9fa' : '#6C5CE7'
+                }}
                 onClick={() => {
                     const newValue = start + (currentStep / 100) * (end - start);
                     setValue(newValue);
