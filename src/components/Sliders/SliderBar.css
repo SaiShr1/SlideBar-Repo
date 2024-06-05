@@ -70,7 +70,7 @@
 
 .Slider-mark-for-each-step {
   transform: translateX(-50%);
-  top: -0.74rem;
+  top: -0.7rem;
   position: absolute;
   /* background: #c7b9fa; */
   background: #000000;
