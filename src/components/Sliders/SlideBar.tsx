@@ -20,6 +20,7 @@ interface SliderProps {
     labelsDescriptionArray: Array<labelsDescriptionArrayProps>
     marks: boolean
     markForEachStep?: boolean
+    showValue?: boolean
 
 }
 
@@ -55,7 +56,12 @@ const SliderBar = (props: SliderProps) => {
     const labelsMapper = labelDescriptionArray.map((item: labelsDescriptionArrayProps, index: number) => {
         const labelPosition = (100 / (labelDescriptionArray.length - 1)) * index;
         return (
-            <span key={index} className='SliderBar-labels' style={{ left: `${labelPosition}%` }}>
+            <span
+                key={index}
+                className='SliderBar-labels'
+                style={{ left: `${labelPosition}%` }}
+                onClick={() => { handleMarkAndLabelClick(index) }}
+            >
                 {item.label}
             </span>
         )
@@ -130,7 +136,7 @@ const SliderBar = (props: SliderProps) => {
         document.removeEventListener('mouseup', handleMouseUp);
     };
 
-    const handleMarkClick = (index: number) => {
+    const handleMarkAndLabelClick = (index: number) => {
         const newValue = start + ((end - start) / (labelDescriptionArray.length - 1)) * index;
         // console.log('newValue:::::---->', newValue);
         setValue(newValue);
@@ -148,7 +154,7 @@ const SliderBar = (props: SliderProps) => {
                     left: `${markLeftPosition}%`,
                     backgroundColor: markLeftPosition <= value ? '#c7b9fa' : '#5d50bf'
                 }}
-                onClick={() => { handleMarkClick(index) }}
+                onClick={() => { handleMarkAndLabelClick(index) }}
             ></span>
         )
     });
@@ -238,7 +244,12 @@ const SliderBar = (props: SliderProps) => {
                         onMouseEnter={() => setIsHoveredOrActive(true)}
                         onMouseLeave={() => setIsHoveredOrActive(false)}
                     >
-                        {isHoveredOrActive && <span className='Slider-custom-thumb-tooltip'>{value.toString()}</span>}
+                        {
+                            props.showValue ?
+                                isHoveredOrActive && <span className='Slider-custom-thumb-tooltip'>{value.toString()}</span>
+                                :
+                                null
+                        }
                     </span>
                 </div>
                 <div className="SliderBar-label-container">

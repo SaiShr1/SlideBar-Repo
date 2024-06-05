@@ -148,6 +148,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+  cursor: pointer;
 }
 
 .SliderBar-label-description-container {

@@ -53,6 +53,7 @@ function App() {
         labelsDescriptionArray={labelsDescriptionArrayShort}
         marks={true}
         markForEachStep={true}
+        showValue={true}
       />
     </>
   )
