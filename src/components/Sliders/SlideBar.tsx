@@ -28,6 +28,8 @@ const SliderBar = (props: SliderProps) => {
     const [value, setValue] = useState(props.defaultValue)
     const sliderRef = useRef<HTMLInputElement>(null)
     // const thumbRef = useRef<HTMLSpanElement>(null)
+    const [isHoveredOrActive, setIsHoveredOrActive] = useState(false);
+
     const labelDescriptionArray: labelsDescriptionArrayProps[] = props.labelsDescriptionArray;
     console.log(value, 'value', typeof value);
 
@@ -189,6 +191,19 @@ const SliderBar = (props: SliderProps) => {
         )
     };
 
+    const handleMouseDownHover = () => {
+        setIsHoveredOrActive(true);
+        // Add new event listeners
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        // e.preventDefault(); // Prevent any default action
+    };
+
+    const handleMouseDownCombinedThumb = () => {
+        handleMouseDownHover();
+        handleMouseDown();
+    }
+
 
     return (
         <div className='SliderBar-Wrapper'>
@@ -216,7 +231,15 @@ const SliderBar = (props: SliderProps) => {
                 </div>
                 <div className='Slider-custom-thumb-container'>
                     {/* Add ref={thumbRef} for access thumb in future */}
-                    <span className='Slider-custom-thumb' style={customThumbPositionLogic()} onMouseDown={handleMouseDown}></span>
+                    <span
+                        className='Slider-custom-thumb'
+                        style={customThumbPositionLogic()}
+                        onMouseDown={handleMouseDownCombinedThumb}
+                        onMouseEnter={() => setIsHoveredOrActive(true)}
+                        onMouseLeave={() => setIsHoveredOrActive(false)}
+                    >
+                        {isHoveredOrActive && <span className='Slider-custom-thumb-tooltip'>{value.toString()}</span>}
+                    </span>
                 </div>
                 <div className="SliderBar-label-container">
                     {labelsMapper}
