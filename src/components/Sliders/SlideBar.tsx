@@ -32,6 +32,9 @@ const SliderBar = (props: SliderProps) => {
     const step = props.step!;
     const onChange = props.onChange;
 
+    // console.log(step, 'step', typeof step);
+
+
     const [value, setValue] = useState(props.defaultValue || 0)
     const sliderRef = useRef<HTMLInputElement>(null)
     // const thumbRef = useRef<HTMLSpanElement>(null)
@@ -40,7 +43,7 @@ const SliderBar = (props: SliderProps) => {
 
 
     const labelDescriptionArray: labelsDescriptionArrayProps[] = props.labelsDescriptionArray;
-    console.log(value, 'value', typeof value);
+    // console.log(value, 'value', typeof value);
 
     if (labelDescriptionArray.length <= 1) {
         // Return fallback UI
