@@ -6,7 +6,9 @@ interface labelsDescriptionArrayProps {
     description: string
 }
 interface SliderProps {
-    defaultValue: number
+    labelsDescriptionArray: Array<labelsDescriptionArrayProps>
+    defaultValue?: number
+    discrete?: boolean
     start?: number
     end?: number
     step?: number
@@ -16,23 +18,34 @@ interface SliderProps {
      * An optional function to be called when form is saved
      **/
     onChange?: (arg?: number) => void
-    discrete: boolean
-    labelsDescriptionArray: Array<labelsDescriptionArrayProps>
-    marks: boolean
+    marks?: boolean
     markForEachStep?: boolean
     showValue?: boolean
 
 }
 
 const SliderBar = (props: SliderProps) => {
-    const { start = 0, end = 100, step = 1, onChange } = props
-    const [value, setValue] = useState(props.defaultValue)
+    // const { start = 0, end = 100, step = 1, onChange } = props
+
+    const start = props.start!;
+    const end = props.end!;
+    const step = props.step!;
+    const onChange = props.onChange;
+
+    const [value, setValue] = useState(props.defaultValue || 0)
     const sliderRef = useRef<HTMLInputElement>(null)
     // const thumbRef = useRef<HTMLSpanElement>(null)
     const [isHoveredOrActive, setIsHoveredOrActive] = useState(false);
+    // const [isActive, setIsActive] = useState(false);
+
 
     const labelDescriptionArray: labelsDescriptionArrayProps[] = props.labelsDescriptionArray;
     console.log(value, 'value', typeof value);
+
+    if (labelDescriptionArray.length <= 1) {
+        // Return fallback UI
+        return <div className='SlideBar-fallback-UI'>No objects in labels Array provided, Provide at least 2 objects</div>;
+    }
 
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
         // const newValue = Math.round((Number(event.target.value)).toFixed(2));
@@ -79,6 +92,7 @@ const SliderBar = (props: SliderProps) => {
     // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
 
     const handleMouseDown = () => {
+        setIsHoveredOrActive(true);
         // Add new event listeners
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
@@ -132,6 +146,8 @@ const SliderBar = (props: SliderProps) => {
     };
 
     const handleMouseUp = () => {
+        setIsHoveredOrActive(false);
+        // Remove the event listeners
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -197,16 +213,7 @@ const SliderBar = (props: SliderProps) => {
         )
     };
 
-    const handleMouseDownHover = () => {
-        setIsHoveredOrActive(true);
-        // Add new event listeners
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        // e.preventDefault(); // Prevent any default action
-    };
-
     const handleMouseDownCombinedThumb = () => {
-        handleMouseDownHover();
         handleMouseDown();
     }
 
@@ -246,7 +253,8 @@ const SliderBar = (props: SliderProps) => {
                     >
                         {
                             props.showValue ?
-                                isHoveredOrActive && <span className='Slider-custom-thumb-tooltip'>{value.toString()}</span>
+                                <span className={`Slider-custom-thumb-tooltip ${isHoveredOrActive ? 'Slider-custom-thumb-tooltip-visible' : ''}`}>{(Math.round(value)).toString()}</span>
+                                // <span className='Slider-custom-thumb-tooltip Slider-custom-thumb-tooltip-visible'>{(Math.round(value)).toString()}</span>
                                 :
                                 null
                         }
@@ -263,13 +271,14 @@ const SliderBar = (props: SliderProps) => {
     )
 }
 
-// SliderBar.defaultProps = {
-//     defaultValue: 0,
-//     start: 0,
-//     end: 100,
-//     fill: '#A9B6CB',
-//     background: '#EDF1F7',
-//     step: 1,
-// } as Partial<SliderProps>
+
+SliderBar.defaultProps = {
+    defaultValue: 0,
+    start: 0,
+    end: 100,
+    fill: '#6C5CE7',
+    background: '#C7B9FA',
+    step: 1,
+} as Partial<SliderProps>
 
 export default SliderBar

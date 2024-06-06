@@ -3,6 +3,7 @@
   height: 5.5rem;
   width: 40.875rem;
   position: relative;
+  margin: 2rem;
 }
 
 .SliderBar {
@@ -120,9 +121,8 @@
 .Slider-custom-thumb-tooltip {
   border-radius: 0.5rem;
   background: #475161;
-  top: -3rem;
+  top: -2.5rem;
   user-select: none;
-  transform: translateX(-20%);
   display: flex;
   position: relative;
   padding: 0.25rem;
@@ -132,6 +132,34 @@
   flex-wrap: wrap;
   transform-origin: bottom center;
   transition: transform 0.25s ease-in-out;
+  font-size: 0.875rem;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  color: #ffffff;
+  border: 0.15rem solid #a9b6cb;
+
+  opacity: 0;
+  transform: translateX(
+    -20%
+  ); /*translateY(10px) to make it appear smoothly from bottom to top*/
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
+    border-radius 0.5s ease-in-out;
+}
+
+.Slider-custom-thumb-tooltip:hover {
+  transform: scale(-1.25);
+}
+
+.Slider-custom-thumb-tooltip-visible {
+  width: 2rem;
+  border-radius: 0.5rem;
+  opacity: 1;
+  /*translateY(0) to make it appear smoothly from bottom to top*/
+  /* transform: translateX(-20%); */
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
+    border-radius 0.5s ease-in-out;
 }
 
 .SliderBar-label-container {
@@ -162,6 +190,21 @@
   align-items: center;
   justify-content: center;
   position: absolute;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.SlideBar-fallback-UI {
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   color: #ffffff;
   font-size: 0.875rem;
   font-family: Inter, sans-serif;

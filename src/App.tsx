@@ -43,16 +43,18 @@ function App() {
       <SliderBar
         defaultValue={0}
         discrete={true}
-        labelsDescriptionArray={labelsDescriptionArray}
+        // labelsDescriptionArray={labelsDescriptionArray}
+        labelsDescriptionArray={[]}
         marks={true}
       />
       <h3>Slider</h3>
       <SliderBar
+        // step={10}
         defaultValue={0}
         discrete={false}
         labelsDescriptionArray={labelsDescriptionArrayShort}
-        marks={true}
-        markForEachStep={true}
+        // marks={true}
+        // markForEachStep={true}
         showValue={true}
       />
     </>
