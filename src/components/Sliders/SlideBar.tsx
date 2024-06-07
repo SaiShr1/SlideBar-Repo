@@ -45,9 +45,18 @@ const SliderBar = (props: SliderProps) => {
     const labelDescriptionArray: labelsDescriptionArrayProps[] = props.labelsDescriptionArray;
     // console.log(value, 'value', typeof value);
 
+    // Edge cases
     if (labelDescriptionArray.length <= 1) {
         // Return fallback UI
         return <div className='SlideBar-fallback-UI'>No objects in labels Array provided, Provide at least 2 objects</div>;
+    }
+    else if (step <= 0 || !step) {
+        // Return fallback UI
+        return <div className='SlideBar-fallback-UI'>Step value cannot be {step}, Provide a valid step value</div>;
+    }
+    else if (!Number.isFinite(start) || !Number.isFinite(end) || start >= end || start < 0 || end <= 0) {
+        // Return fallback UI
+        return <div className='SlideBar-fallback-UI'>{start === 0 ? null : `Start value cannot be {start} and `} End value cannot be {end}, Provide a valid start and end value</div>;
     }
 
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +100,7 @@ const SliderBar = (props: SliderProps) => {
         }
     };
 
-    const stepCalculator = (props.discrete ? (100 / (labelDescriptionArray.length - 1)) : step).toFixed(2);
+    const stepCalculator = Math.round(Number((props.discrete ? (100 / (labelDescriptionArray.length - 1)) : step).toFixed(2)));
     // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
 
     const handleMouseDown = () => {
@@ -127,7 +136,7 @@ const SliderBar = (props: SliderProps) => {
         // This logic is used to snap the thumb to the nearest step
         if (props.discrete) {
             // Calculate the nearest step
-            const stepInNumber = Math.round(Number(stepCalculator));
+            const stepInNumber = stepCalculator;
             // Calculate the remainder which is used to determine if the thumb should snap to the next step
             const remainder = newValue % stepInNumber;
             // If the remainder is less than half of the step, snap to the lower step, otherwise snap to the higher step
@@ -157,12 +166,18 @@ const SliderBar = (props: SliderProps) => {
 
     const handleMarkAndLabelClick = (index: number) => {
         const newValue = start + ((end - start) / (labelDescriptionArray.length - 1)) * index;
-        // console.log('newValue:::::---->', newValue);
+
+        // let newValue = start + (stepCalculator) * index;
+        // newValue = Math.max(start, newValue)
+        // newValue = Math.min(end, newValue)
+
+        // console.log('LabelnewValue:::::---->', newValue);
         setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
     };
+
     const marksMapper = labelDescriptionArray.map((_item: labelsDescriptionArrayProps, index: number) => {
         const markLeftPosition = ((100 / (labelDescriptionArray.length - 1))) * index;
         return (
@@ -178,9 +193,10 @@ const SliderBar = (props: SliderProps) => {
         )
     });
 
-    const totalSteps = 100 / step;
-    const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * step);
+    const totalSteps = 100 / stepCalculator;
+    const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * stepCalculator);
     const marksForEachStepMapper = stepsArray.map((currentStep) => {
+
         return (
             <span
                 key={currentStep}
@@ -191,6 +207,7 @@ const SliderBar = (props: SliderProps) => {
                 }}
                 onClick={() => {
                     const newValue = start + (currentStep / 100) * (end - start);
+                    // console.log('Label newValue:::::---->', newValue);
                     setValue(newValue);
                     if (onChange) {
                         onChange(newValue);
