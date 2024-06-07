@@ -49,7 +49,7 @@
   cursor: pointer;
 }
 
-.Slider-marks-wrapper {
+.SliderBar-marks-wrapper {
   position: relative;
   width: 98.5%;
   margin: 0 auto;
@@ -57,7 +57,7 @@
   align-items: center;
 }
 
-.Slider-mark {
+.SliderBar-mark {
   transform: translateX(-50%);
   top: -0.74rem;
   position: absolute;
@@ -69,7 +69,7 @@
   transform-origin: center;
 }
 
-.Slider-mark-for-each-step {
+.SliderBar-mark-for-each-step {
   transform: translateX(-50%);
   top: -0.7rem;
   position: absolute;
@@ -82,14 +82,14 @@
   transform-origin: center;
 }
 
-.Slider-custom-thumb-container {
+.SliderBar-custom-thumb-container {
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.Slider-custom-thumb {
+.SliderBar-custom-thumb {
   top: -1.35rem;
   position: absolute;
   background: rgba(108, 92, 231, 1);
@@ -102,11 +102,11 @@
   transition: transform 0.25s ease-in-out; /* "transform 0.25s ease-in-out"This part is important, this will also make thumb scale smooth without applying transition to it's motion while sliding*/
 }
 
-.Slider-custom-thumb:hover {
+.SliderBar-custom-thumb:hover {
   transform: scale(1.25);
 }
 
-.Slider-custom-thumb:before {
+.SliderBar-custom-thumb:before {
   content: "";
   position: absolute;
   top: 50%;
@@ -118,7 +118,7 @@
   z-index: -1;
 }
 
-.Slider-custom-thumb-tooltip {
+.SliderBar-custom-thumb-tooltip {
   border-radius: 0.5rem;
   background: #475161;
   top: -2.5rem;
@@ -141,25 +141,21 @@
   border: 0.15rem solid #a9b6cb;
 
   opacity: 0;
-  transform: translateX(
-    -20%
-  ); /*translateY(10px) to make it appear smoothly from bottom to top*/
-  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
-    border-radius 0.5s ease-in-out;
+  /*translateY(10px) to make it appear smoothly from bottom to top*/
+  transform: translateX(-20%);
+  /* border-radius 0.5s ease-in-out to make it circle to square*/
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 
-.Slider-custom-thumb-tooltip:hover {
-  transform: scale(-1.25);
-}
-
-.Slider-custom-thumb-tooltip-visible {
+.SliderBar-custom-thumb-tooltip-visible {
   width: 2rem;
-  border-radius: 0.5rem;
+  /*to make it circle to square*/
+  /* border-radius: 0.5rem; */
   opacity: 1;
   /*translateY(0) to make it appear smoothly from bottom to top*/
   /* transform: translateX(-20%); */
-  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
-    border-radius 0.5s ease-in-out;
+  /* border-radius 0.5s ease-in-out to make it circle to square*/
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 
 .SliderBar-label-container {
@@ -184,7 +180,7 @@
   margin-top: 2.5rem;
 }
 
-.Slider-label-description {
+.SliderBar-label-description {
   width: 100%;
   display: flex;
   align-items: center;

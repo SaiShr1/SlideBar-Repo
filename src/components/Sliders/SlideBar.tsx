@@ -168,7 +168,7 @@ const SliderBar = (props: SliderProps) => {
         return (
             <span
                 key={index}
-                className='Slider-mark'
+                className='SliderBar-mark'
                 style={{
                     left: `${markLeftPosition}%`,
                     backgroundColor: markLeftPosition <= value ? '#c7b9fa' : '#5d50bf'
@@ -184,7 +184,7 @@ const SliderBar = (props: SliderProps) => {
         return (
             <span
                 key={currentStep}
-                className='Slider-mark-for-each-step'
+                className='SliderBar-mark-for-each-step'
                 style={{
                     left: `${currentStep}%`,
                     backgroundColor: currentStep <= value ? '#c7b9fa' : '#5d50bf'
@@ -208,7 +208,7 @@ const SliderBar = (props: SliderProps) => {
         const indexToRenderDescriptionDynamically = Math.round(valueToPercentage * (labelDescriptionArray.length - 1));
         return (
             props.discrete ?
-                <span className='Slider-label-description'>
+                <span className='SliderBar-label-description'>
                     {labelDescriptionArray[(indexToRenderDescriptionDynamically)].description}
                 </span>
                 :
@@ -235,7 +235,7 @@ const SliderBar = (props: SliderProps) => {
                     onChange={onSlide}
                     step={stepCalculator}
                 />
-                <div className='Slider-marks-wrapper'>
+                <div className='SliderBar-marks-wrapper'>
                     {props.marks && props.markForEachStep ?
                         marksForEachStepMapper
                         :
@@ -245,10 +245,10 @@ const SliderBar = (props: SliderProps) => {
                             null
                     }
                 </div>
-                <div className='Slider-custom-thumb-container'>
+                <div className='SliderBar-custom-thumb-container'>
                     {/* Add ref={thumbRef} for access thumb in future */}
                     <span
-                        className='Slider-custom-thumb'
+                        className='SliderBar-custom-thumb'
                         style={customThumbPositionLogic()}
                         onMouseDown={handleMouseDownCombinedThumb}
                         onMouseEnter={() => setIsHoveredOrActive(true)}
@@ -256,8 +256,8 @@ const SliderBar = (props: SliderProps) => {
                     >
                         {
                             props.showValue ?
-                                <span className={`Slider-custom-thumb-tooltip ${isHoveredOrActive ? 'Slider-custom-thumb-tooltip-visible' : ''}`}>{(Math.round(value)).toString()}</span>
-                                // <span className='Slider-custom-thumb-tooltip Slider-custom-thumb-tooltip-visible'>{(Math.round(value)).toString()}</span>
+                                <span className={`SliderBar-custom-thumb-tooltip ${isHoveredOrActive ? 'SliderBar-custom-thumb-tooltip-visible' : ''}`}>{(Math.round(value)).toString()}</span>
+                                // <span className='SliderBar-custom-thumb-tooltip SliderBar-custom-thumb-tooltip-visible'>{(Math.round(value)).toString()}</span>
                                 :
                                 null
                         }
