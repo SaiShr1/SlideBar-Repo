@@ -4,3 +4,25 @@
   padding: 2rem;
   text-align: center;
 }
+
+.Slider {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Slider__discrete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.Slider__smooth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
