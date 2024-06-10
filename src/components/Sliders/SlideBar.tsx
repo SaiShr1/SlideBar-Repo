@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
 import './SliderBar.css'
 
-interface labelsDescriptionArrayProps {
+export interface labelsDescriptionArrayProps {
     label: string,
     description: string
 }
-interface SliderProps {
+export interface SliderProps {
     labelsDescriptionArray: Array<labelsDescriptionArrayProps>
     defaultValue?: number
     discrete?: boolean
@@ -20,7 +20,8 @@ interface SliderProps {
     onChange?: (arg?: number) => void
     marks?: boolean
     markForEachStep?: boolean
-    showValue?: boolean
+    showValueTooltip?: boolean
+    showDescription?: boolean
 
 }
 
@@ -31,6 +32,7 @@ const SliderBar = (props: SliderProps) => {
     const end = props.end!;
     const step = props.step!;
     const onChange = props.onChange;
+    const defaultValue = props.defaultValue!;
 
     // console.log(step, 'step', typeof step);
 
@@ -69,8 +71,8 @@ const SliderBar = (props: SliderProps) => {
     }
 
     const settings = {
-        fill: props.fill || '#6C5CE7',
-        background: props.background || '#C7B9FA',
+        fill: props.fill || '#6C5CE7', //dark
+        background: props.background || '#C7B9FA', //light
     }
 
     const percentage = (100 * (value - start)) / (end - start)
@@ -84,7 +86,7 @@ const SliderBar = (props: SliderProps) => {
             <span
                 key={index}
                 className='SliderBar-labels'
-                style={{ left: `${labelPosition}%` }}
+                style={{ left: `${(labelPosition).toFixed(2)}%` }}
                 onClick={() => { handleMarkAndLabelClick(index) }}
             >
                 {item.label}
@@ -166,18 +168,12 @@ const SliderBar = (props: SliderProps) => {
 
     const handleMarkAndLabelClick = (index: number) => {
         const newValue = start + ((end - start) / (labelDescriptionArray.length - 1)) * index;
-
-        // let newValue = start + (stepCalculator) * index;
-        // newValue = Math.max(start, newValue)
-        // newValue = Math.min(end, newValue)
-
-        // console.log('LabelnewValue:::::---->', newValue);
+        // console.log('newValue:::::---->', newValue);
         setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
     };
-
     const marksMapper = labelDescriptionArray.map((_item: labelsDescriptionArrayProps, index: number) => {
         const markLeftPosition = ((100 / (labelDescriptionArray.length - 1))) * index;
         return (
@@ -185,8 +181,8 @@ const SliderBar = (props: SliderProps) => {
                 key={index}
                 className='SliderBar-mark'
                 style={{
-                    left: `${markLeftPosition}%`,
-                    backgroundColor: markLeftPosition <= value ? '#c7b9fa' : '#5d50bf'
+                    left: `${(markLeftPosition).toFixed(2)}%`,
+                    backgroundColor: markLeftPosition <= value ? props.background || '#c7b9fa' : props.fill || '#5d50bf'
                 }}
                 onClick={() => { handleMarkAndLabelClick(index) }}
             ></span>
@@ -196,18 +192,16 @@ const SliderBar = (props: SliderProps) => {
     const totalSteps = 100 / stepCalculator;
     const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * stepCalculator);
     const marksForEachStepMapper = stepsArray.map((currentStep) => {
-
         return (
             <span
                 key={currentStep}
                 className='SliderBar-mark-for-each-step'
                 style={{
-                    left: `${currentStep}%`,
-                    backgroundColor: currentStep <= value ? '#c7b9fa' : '#5d50bf'
+                    left: `${(currentStep).toFixed(2)}%`,
+                    backgroundColor: currentStep <= value ? props.background || '#c7b9fa' : props.fill || '#5d50bf'
                 }}
                 onClick={() => {
                     const newValue = start + (currentStep / 100) * (end - start);
-                    // console.log('Label newValue:::::---->', newValue);
                     setValue(newValue);
                     if (onChange) {
                         onChange(newValue);
@@ -219,8 +213,10 @@ const SliderBar = (props: SliderProps) => {
 
 
     const labelDescriptionMapper = () => {
+        // Use defaultValue when value is undefined
+        const valueToUse = value !== undefined ? value : defaultValue;
         // Converting value to percentage but not multiplying by 100
-        const valueToPercentage = (value / 100);
+        const valueToPercentage = (valueToUse / 100);
         // Multiplying by (labelDescriptionArray.length - 1)  then rounding it up to get the index of the labelDescriptionArray
         const indexToRenderDescriptionDynamically = Math.round(valueToPercentage * (labelDescriptionArray.length - 1));
         return (
@@ -265,6 +261,7 @@ const SliderBar = (props: SliderProps) => {
                 <div className='SliderBar-custom-thumb-container'>
                     {/* Add ref={thumbRef} for access thumb in future */}
                     <span
+                        data-testid="SliderBar-custom-thumb"
                         className='SliderBar-custom-thumb'
                         style={customThumbPositionLogic()}
                         onMouseDown={handleMouseDownCombinedThumb}
@@ -272,7 +269,7 @@ const SliderBar = (props: SliderProps) => {
                         onMouseLeave={() => setIsHoveredOrActive(false)}
                     >
                         {
-                            props.showValue ?
+                            props.showValueTooltip ?
                                 <span className={`SliderBar-custom-thumb-tooltip ${isHoveredOrActive ? 'SliderBar-custom-thumb-tooltip-visible' : ''}`}>{(Math.round(value)).toString()}</span>
                                 // <span className='SliderBar-custom-thumb-tooltip SliderBar-custom-thumb-tooltip-visible'>{(Math.round(value)).toString()}</span>
                                 :
@@ -284,7 +281,11 @@ const SliderBar = (props: SliderProps) => {
                     {labelsMapper}
                 </div>
                 <div className="SliderBar-label-description-container">
-                    {labelDescriptionMapper()}
+                    {props.showDescription ?
+                        labelDescriptionMapper()
+                        :
+                        null
+                    }
                 </div>
             </div>
         </div>

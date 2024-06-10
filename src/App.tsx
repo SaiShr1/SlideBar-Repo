@@ -45,6 +45,7 @@ function App() {
           defaultValue={0}
           discrete={true}
           labelsDescriptionArray={labelsDescriptionArray}
+          showValueTooltip={true}
           // labelsDescriptionArray={[]}
           marks={true}
         // start={0}
@@ -62,7 +63,7 @@ function App() {
           labelsDescriptionArray={labelsDescriptionArrayShort}
           marks={false}
           markForEachStep={true}
-          showValue={true}
+          showValueTooltip={true}
         />
       </div>
     </div>
