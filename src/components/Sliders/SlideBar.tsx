@@ -268,7 +268,7 @@ const SliderBar = (props: SliderProps) => {
                         style={customThumbPositionLogic()}
                         onMouseDown={handleMouseDownCombinedThumb}
                         onMouseEnter={() => setIsHoveredOrActive(true)}
-                    // onMouseLeave={() => setIsHoveredOrActive(false)} //Turn on if you want to hide tooltip on mouse leave
+                        onMouseLeave={() => setIsHoveredOrActive(false)} //Turn on if you want to hide tooltip on mouse leave
                     >
                         {
                             props.showValueTooltip ?
