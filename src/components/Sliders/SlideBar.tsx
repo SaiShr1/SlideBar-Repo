@@ -94,11 +94,12 @@ const SliderBar = (props: SliderProps) => {
         )
     });
 
-    const customThumbPositionLogic = () => {
+    const customThumbPositionLogicAndStyles = () => {
         const positionFromStartToValue = (value - start);
         const totalRange = (end - start);
         return {
-            left: `${((positionFromStartToValue) / (totalRange)) * 100}%`
+            left: `${((positionFromStartToValue) / (totalRange)) * 100}%`,
+            background: `${settings.fill}`,
         }
     };
 
@@ -265,7 +266,7 @@ const SliderBar = (props: SliderProps) => {
                     <span
                         data-testid="SliderBar-custom-thumb"
                         className='SliderBar-custom-thumb'
-                        style={customThumbPositionLogic()}
+                        style={customThumbPositionLogicAndStyles()}
                         onMouseDown={handleMouseDownCombinedThumb}
                         onMouseEnter={() => setIsHoveredOrActive(true)}
                         onMouseLeave={() => setIsHoveredOrActive(false)} //Turn on if you want to hide tooltip on mouse leave
