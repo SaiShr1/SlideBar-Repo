@@ -114,6 +114,7 @@ const SliderBar = (props: SliderProps) => {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
+        setIsHoveredOrActive(true);
         // const thumbStepInNumber = Math.round(Number(stepCalculator))
         if (!sliderRef.current) {
             return;
@@ -230,6 +231,7 @@ const SliderBar = (props: SliderProps) => {
     };
 
     const handleMouseDownCombinedThumb = () => {
+        setIsHoveredOrActive(true);
         handleMouseDown();
     }
 
@@ -266,12 +268,25 @@ const SliderBar = (props: SliderProps) => {
                         style={customThumbPositionLogic()}
                         onMouseDown={handleMouseDownCombinedThumb}
                         onMouseEnter={() => setIsHoveredOrActive(true)}
-                        onMouseLeave={() => setIsHoveredOrActive(false)}
+                    // onMouseLeave={() => setIsHoveredOrActive(false)} //Turn on if you want to hide tooltip on mouse leave
                     >
                         {
                             props.showValueTooltip ?
-                                <span className={`SliderBar-custom-thumb-tooltip ${isHoveredOrActive ? 'SliderBar-custom-thumb-tooltip-visible' : ''}`}>{(Math.round(value)).toString()}</span>
-                                // <span className='SliderBar-custom-thumb-tooltip SliderBar-custom-thumb-tooltip-visible'>{(Math.round(value)).toString()}</span>
+                                <span
+                                    className={
+                                        `SliderBar-custom-thumb-tooltip ${isHoveredOrActive ?
+                                            'SliderBar-custom-thumb-tooltip-visible'
+                                            :
+                                            ''
+                                        }`}
+                                >
+                                    {(Math.round(value)).toString()}
+                                </span>
+                                // <span
+                                //     className='SliderBar-custom-thumb-tooltip SliderBar-custom-thumb-tooltip-visible'
+                                // >
+                                //     {(Math.round(value)).toString()}
+                                // </span>
                                 :
                                 null
                         }

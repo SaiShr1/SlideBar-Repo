@@ -42,10 +42,11 @@ function App() {
       <div className='Slider__discrete'>
         <h3>Discrete Slider</h3>
         <SliderBar
-          defaultValue={0}
+          defaultValue={50}
           discrete={true}
           labelsDescriptionArray={labelsDescriptionArray}
           showValueTooltip={true}
+          showDescription={true}
           // labelsDescriptionArray={[]}
           marks={true}
         // start={0}

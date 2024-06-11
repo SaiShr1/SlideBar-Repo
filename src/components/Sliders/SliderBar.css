@@ -144,7 +144,7 @@
 
   opacity: 0;
   /* translateY(10px) to make it appear smoothly from bottom to top */
-  transform: translateX(-20%) translateY(10px);
+  transform: translateX(-16%) translateY(10px);
   /* border-radius 0.5s ease-in-out to make it circle to square*/
   transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
     border-radius 0.25s ease-in-out;
@@ -157,7 +157,7 @@
   border-radius: 0.5rem;
   opacity: 1;
   /*translateY(0) to make it appear smoothly from bottom to top*/
-  transform: translateX(-20%) translateY(0);
+  transform: translateX(-16%) translateY(0);
   /* border-radius 0.5s ease-in-out to make it circle to square*/
   transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
     border-radius 0.25s ease-in-out;
