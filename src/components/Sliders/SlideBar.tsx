@@ -7,6 +7,8 @@ export interface labelsDescriptionArrayProps {
 }
 export interface SliderProps {
     labelsDescriptionArray: Array<labelsDescriptionArrayProps>
+    value: number
+    onChange: (arg: number) => void
     defaultValue?: number
     discrete?: boolean
     start?: number
@@ -14,10 +16,6 @@ export interface SliderProps {
     step?: number
     fill?: string
     background?: string
-    /**
-     * An optional function to be called when form is saved
-     **/
-    onChange?: (arg?: number) => void
     marks?: boolean
     markForEachStep?: boolean
     showValueTooltip?: boolean
@@ -33,11 +31,9 @@ const SliderBar = (props: SliderProps) => {
     const step = props.step!;
     const onChange = props.onChange;
     const defaultValue = props.defaultValue!;
+    const value = props.value;
 
     // console.log(step, 'step', typeof step);
-
-
-    const [value, setValue] = useState(props.defaultValue || 0)
     const sliderRef = useRef<HTMLInputElement>(null)
     // const thumbRef = useRef<HTMLSpanElement>(null)
     const [isHoveredOrActive, setIsHoveredOrActive] = useState(false);
@@ -64,7 +60,6 @@ const SliderBar = (props: SliderProps) => {
     const onSlide = (event: React.ChangeEvent<HTMLInputElement>) => {
         // const newValue = Math.round((Number(event.target.value)).toFixed(2));
         const newValue = Number(Math.round(Number(event.target.value)).toFixed(2));
-        setValue(newValue)
         if (onChange) {
             onChange(newValue)
         }
@@ -104,7 +99,7 @@ const SliderBar = (props: SliderProps) => {
     };
 
     const stepCalculator = Math.round(Number((props.discrete ? (100 / (labelDescriptionArray.length - 1)) : step).toFixed(2)));
-    // console.log('stepCalculator', stepCalculator, typeof stepCalculator);
+    console.log('stepCalculator', stepCalculator, typeof stepCalculator);
 
     const handleMouseDown = () => {
         setIsHoveredOrActive(true);
@@ -155,7 +150,6 @@ const SliderBar = (props: SliderProps) => {
         //Ensure the value is within the range
         newValue = Math.round(Math.max(start, Math.min(end, newValue)));
         // Update the value
-        setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
@@ -171,7 +165,6 @@ const SliderBar = (props: SliderProps) => {
     const handleMarkAndLabelClick = (index: number) => {
         const newValue = start + ((end - start) / (labelDescriptionArray.length - 1)) * index;
         // console.log('newValue:::::---->', newValue);
-        setValue(newValue);
         if (onChange) {
             onChange(newValue);
         }
@@ -192,19 +185,24 @@ const SliderBar = (props: SliderProps) => {
     });
 
     const totalSteps = 100 / stepCalculator;
+    // console.log('totalSteps', totalSteps);
     const stepsArray = Array.from({ length: totalSteps + 1 }, (_, i) => i * stepCalculator);
+    // console.log('stepsArray', stepsArray);
     const marksForEachStepMapper = stepsArray.map((currentStep) => {
+        console.log('currentStep', currentStep);
+        const markLeftPosition = ((100 / totalSteps)) * currentStep;
+        console.log('markLeftPosition', markLeftPosition);
+
         return (
             <span
                 key={currentStep}
                 className='SliderBar-mark-for-each-step'
                 style={{
-                    left: `${(currentStep).toFixed(2)}%`,
+                    left: `${(markLeftPosition).toFixed(2)}%`,
                     backgroundColor: currentStep <= value ? props.background || '#c7b9fa' : props.fill || '#5d50bf'
                 }}
                 onClick={() => {
                     const newValue = start + (currentStep / 100) * (end - start);
-                    setValue(newValue);
                     if (onChange) {
                         onChange(newValue);
                     }
@@ -216,7 +214,7 @@ const SliderBar = (props: SliderProps) => {
 
     const labelDescriptionMapper = () => {
         // Use defaultValue when value is undefined
-        const valueToUse = value !== undefined ? value : defaultValue;
+        const valueToUse = (defaultValue ? defaultValue : value !== undefined ? value : 0);
         // Converting value to percentage but not multiplying by 100
         const valueToPercentage = (valueToUse / 100);
         // Multiplying by (labelDescriptionArray.length - 1)  then rounding it up to get the index of the labelDescriptionArray
@@ -310,12 +308,22 @@ const SliderBar = (props: SliderProps) => {
 
 
 SliderBar.defaultProps = {
+    labelsDescriptionArray: [
+        { label: "0", description: "" },
+        { label: "100", description: "" }
+    ],
     defaultValue: 0,
     start: 0,
     end: 100,
     fill: '#6C5CE7',
     background: '#C7B9FA',
     step: 1,
+    discrete: false,
+    marks: false,
+    markForEachStep: false,
+    showValueTooltip: false,
+    showDescription: false,
+    value: 0,
 } as Partial<SliderProps>
 
 export default SliderBar

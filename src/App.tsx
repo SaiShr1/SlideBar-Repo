@@ -1,7 +1,19 @@
+import { useState } from 'react'
 import './App.css'
 import SliderBar from './components/Sliders/SlideBar'
 
 function App() {
+
+  const [discreteValue, setDiscreteValue] = useState<number>()
+  const [smoothValue, setSmoothValue] = useState<number>()
+
+
+  const handleDiscreteValueChange = (newValue: number) => {
+    setDiscreteValue(newValue)
+  }
+  const handleSmoothValueChange = (newValue: number) => {
+    setSmoothValue(newValue)
+  }
 
   const labelsDescriptionArray = [
     {
@@ -42,7 +54,9 @@ function App() {
       <div className='Slider__discrete'>
         <h3>Discrete Slider</h3>
         <SliderBar
-          defaultValue={50}
+          onChange={handleDiscreteValueChange}
+          value={discreteValue}
+          defaultValue={25}
           discrete={true}
           labelsDescriptionArray={labelsDescriptionArray}
           showValueTooltip={true}
@@ -52,17 +66,22 @@ function App() {
         // start={0}
         // end={1}
         // step={-1}
+
         />
       </div>
       <div className='Slider__smooth'>
 
         <h3>Smooth Slider With Value ToolTip!</h3>
         <SliderBar
-          // step={10}
-          defaultValue={0}
+          step={1}
+          start={0}
+          end={100}
+          onChange={handleSmoothValueChange}
+          value={smoothValue}
+          defaultValue={35}
           discrete={false}
           labelsDescriptionArray={labelsDescriptionArrayShort}
-          marks={false}
+          marks={true}
           markForEachStep={true}
           showValueTooltip={true}
         />
